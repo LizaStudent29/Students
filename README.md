@@ -5,6 +5,8 @@
 
 Используется база данных **SQLite**. Реализованы все операции **CRUD** (создание, чтение, обновление, удаление).
 
+Добавлена поддержка **JWT-аутентификации** и **авторизации** для защиты эндпоинтов API.
+
 ---
 
 ## ✅ Функционал
@@ -21,10 +23,12 @@
 - Удаление студента по ID
 
 ### FastAPI-сервис (`main.py`):
-- `GET /students` — получить всех студентов  
-- `POST /students` — добавить нового студента  
-- `PUT /students/{student_id}` — обновить данные студента  
-- `DELETE /students/{student_id}` — удалить студента  
+- `POST /auth/register` — регистрация нового пользователя  
+- `POST /auth/token` — получение JWT-токена по логину и паролю  
+- `GET /students/` — получить всех студентов (требуется авторизация)  
+- `POST /students/` — добавить нового студента (требуется авторизация)  
+- `PUT /students/{student_id}` — обновить данные студента (требуется авторизация)  
+- `DELETE /students/{student_id}` — удалить студента (требуется авторизация)  
 
 ---
 
@@ -32,4 +36,4 @@
 
 1. Установите зависимости:
    ```bash
-   pip install sqlalchemy fastapi uvicorn
+   pip install sqlalchemy fastapi uvicorn python-jose[cryptography] passlib[bcrypt]
