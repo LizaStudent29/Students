@@ -1,5 +1,5 @@
 import csv
-from sqlalchemy import create_engine, Column, Integer, String, Float, func
+from sqlalchemy import create_engine, Column, Integer, String, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
@@ -40,6 +40,29 @@ class StudentDB:
             session.commit()
         session.close()
 
+    def get_all_students(self):
+        """Получить всех студентов"""
+        session = self.Session()
+        students = session.query(Student).all()
+        session.close()
+        return students
+
+    def insert_student(self, last_name, first_name, faculty, course, score):
+        """Добавить нового студента"""
+        session = self.Session()
+        student = Student(
+            last_name=last_name,
+            first_name=first_name,
+            faculty=faculty,
+            course=course,
+            score=score
+        )
+        session.add(student)
+        session.commit()
+        session.refresh(student)
+        session.close()
+        return student
+
     def get_students_by_faculty(self, faculty_name):
         session = self.Session()
         results = session.query(Student).filter(Student.faculty == faculty_name).all()
@@ -66,3 +89,29 @@ class StudentDB:
         session.close()
         return results
 
+    def update_student(self, student_id, **kwargs):
+        """Обновить данные студента по его ID"""
+        session = self.Session()
+        student = session.query(Student).filter(Student.id == student_id).first()
+        if not student:
+            session.close()
+            return None
+        for key, value in kwargs.items():
+            if hasattr(student, key) and value is not None:
+                setattr(student, key, value)
+        session.commit()
+        session.refresh(student)
+        session.close()
+        return student
+
+    def delete_student_by_id(self, student_id):
+        """Удалить студента по ID"""
+        session = self.Session()
+        student = session.query(Student).filter(Student.id == student_id).first()
+        if not student:
+            session.close()
+            return False
+        session.delete(student)
+        session.commit()
+        session.close()
+        return True
