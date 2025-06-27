@@ -6,8 +6,8 @@ import csv
 import json
 import redis.asyncio as redis
 from fastapi import BackgroundTasks, UploadFile, File
-from student_db import StudentDB, Student
-from auth import router as auth_router, get_current_user
+from .student_db import StudentDB, Student
+from .auth import router as auth_router, get_current_user
 
 # -------------------
 # Инициализация
